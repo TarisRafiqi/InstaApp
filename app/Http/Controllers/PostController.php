@@ -19,7 +19,7 @@ class PostController extends Controller
     {
         $request->validate([
             'caption' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10000', // Validasi gambar
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:10000',
         ]);
 
         $imagePath = null;
@@ -34,6 +34,12 @@ class PostController extends Controller
             'image_path' => $imagePath,
         ]);
 
-        return redirect()->route('dashboard')->with('status', 'Postingan berhasil dibuat!');
+        return redirect()->route('dashboard')->with('status', 'Success Create Post!');
+    }
+
+    public function index()
+    {
+        $posts = Post::with(['user', 'likes', 'comments'])->latest()->get();
+        return view('home', compact('posts'));
     }
 }
